@@ -1,0 +1,66 @@
+
+###############
+# @name login
+POST {{host}}/oauth/token
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+Content-Type: application/json
+Accept: application/json
+
+{
+    "grant_type":"password",
+    "client_id":"{{client_id}}",
+    "client_secret":"{{client_secret}}",
+    "username":"{{username}}",
+    "password":"{{password}}",
+    "scope":"*"
+}
+##############
+@bearer = {{login.response.body.access_token}}
+@product_id =
+@product_name =
+@product_description =
+######################
+# @name ListProduct
+GET {{host}}/api/product
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+#######################
+# @name CreateProduct
+POST {{host}}/api/product
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+
+{
+    "name":"{{product_name}}",
+    "description":"{{product_description}}"
+}
+######################
+# @name ShowProduct
+GET {{host}}/api/product/{{product_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+######################
+# @name UpdateProduct
+PUT {{host}}/api/product/{{product_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+
+{
+    "name":"{{product_name}}",
+    "description":"{{product_description}}"
+}
+######################
+# @name DeleteProduct
+DELETE {{host}}/api/product/{{product_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE

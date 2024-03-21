@@ -1,0 +1,67 @@
+services:
+    laravel:
+        tty: true
+        build:
+            args:
+                user: jedis
+                uid: 1000
+            context: ./docker/8.3-fpm
+            dockerfile: Dockerfile
+        image: jedis/desafio
+        container_name: laravel
+        environment:
+            SERVICE_NAME: laravel
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - '.:/var/www'
+            - ./docker/8.3-fpm/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - jedis
+        depends_on:
+            - pgsql
+    pgsql:
+        image: 'postgres:15'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'jedis-pgsql:/var/lib/postgresql/data'
+            - './docker/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - jedis
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/config/:/etc/nginx/conf.d/
+            - ./docker/nginx/logs:/var/log/nginx
+        networks:
+            - jedis
+networks:
+    jedis:
+        driver: bridge
+volumes:
+    jedis-pgsql:
+        driver: local

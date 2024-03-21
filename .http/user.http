@@ -1,0 +1,69 @@
+###############
+# @name login
+POST {{host}}/oauth/token
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+Content-Type: application/json
+Accept: application/json
+
+{
+    "grant_type":"password",
+    "client_id":"{{client_id}}",
+    "client_secret":"{{client_secret}}",
+    "username":"{{username}}",
+    "password":"{{password}}",
+    "scope":"*"
+}
+##############
+@bearer = {{login.response.body.access_token}}
+@user_id =
+@user_name =
+@user_email =
+@user_password =
+######################
+# @name ListUser
+GET {{host}}/api/user
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=VSC
+#######################
+# @name CreateUser
+POST {{host}}/api/user
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+
+{
+    "name":"{{user_name}}",
+    "email":"{{user_email}}",
+    "password":"{{user_password}}"
+}
+######################
+# @name ShowUser
+GET {{host}}/api/user/{{user_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+
+######################
+# @name UpdateUser
+PUT {{host}}/api/user/{{user_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
+
+{
+    "name":"{{user_name}}",
+    "email":"{{user_email}}",
+    "password":"{{user_password}}"
+}
+######################
+# @name DeleteUser
+DELETE {{host}}/api/user/{{user_id}}
+Authorization: Bearer {{bearer}}
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
