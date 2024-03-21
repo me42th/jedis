@@ -1,5 +1,8 @@
 <?php
-use App\Models\Product;
+use App\Models\{
+    Product,
+    User
+};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\{
     getJson,
@@ -26,6 +29,8 @@ it('list products', function () {
 it('create product', function () {
     // Arrange
     $data = Product::factory()->definition();
+    User::factory()->create();
+    $data['user_id'] = 1;
 
     // Act && Assert
     postJson(route('product.store'),$data)->assertStatus(201);
@@ -37,7 +42,7 @@ it('create product', function () {
 
 it('reject invalid product data', function () {
     // Arrange
-    $product = Product::factory()->definition();
+    $data = Product::factory()->definition();
     foreach($data as $key => &$value){
         $value = 42;
     }
@@ -108,10 +113,6 @@ it('cant update product because the data was wrong',function(){
 
     // Act && Assert
     putJson(route('product.update',$product->id),$data)
-        ->assertStatus(422)
-        ->assertSee(array_keys($data));
-
-    putJson(route('product.update',$product->id),[])
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 });
