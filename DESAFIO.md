@@ -27,8 +27,7 @@ Fique à vontade para utilizar técnicas ou tecnologias não descritas neste doc
 ## Recursos
 - Identificação: Desenvolva um CRUD para gerenciamento de usuários e implemente métodos
 relacionados a autenticação dos usuários, como login e logout.
-Gerenciamento de Produtos: Desenvolva um CRUD para gerenciamento de produtos. Cada
-produto deve ter nome, descrição e usuário que cadastrou o produto.
+Gerenciamento de Produtos: Desenvolva um CRUD para gerenciamento de produtos. Cada produto deve ter nome, descrição e usuário que cadastrou o produto.
 
 ## Documentação
 Documente a API, incluindo todos os endpoints e como utilizá-los. A documentação deve estar,
