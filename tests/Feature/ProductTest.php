@@ -78,6 +78,7 @@ it('update product', function () {
     // Arrange
     $product = Product::factory()->create();
     $data = Product::factory()->definition();
+    $data['user_id'] = 1;
 
     // Act && Assert
     putJson(route('product.update',$product->id),$data)->assertStatus(202);
@@ -91,6 +92,7 @@ it('cant update product because not find him', function () {
     // Arrange
     $product = Product::factory()->create();
     $data = Product::factory()->definition();
+    $data['user_id'] = 1;
 
     // Act && Assert
     putJson(route('product.update',$product->id+1),$data)->assertStatus(404);
