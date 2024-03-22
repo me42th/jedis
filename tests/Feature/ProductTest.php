@@ -10,7 +10,6 @@ use function Pest\Laravel\{
     putJson,
     deleteJson
 };
-use function Pest\Faker\fake;
 
 uses(RefreshDatabase::class);
 
