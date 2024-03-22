@@ -23,8 +23,7 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'name' => 'string|min:8',
-            'description' => 'string|min:8',
-            'user_id' => 'exists:users,id'
+            'description' => 'string|min:8'
         ];
     }
 }

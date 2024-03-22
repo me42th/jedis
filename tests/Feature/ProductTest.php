@@ -28,11 +28,12 @@ it('list products', function () {
 it('create product', function () {
     // Arrange
     $data = Product::factory()->definition();
-    User::factory()->create();
-    $data['user_id'] = 1;
+    $user = User::factory()->create();
+    unset($data['user_id']);
 
     // Act && Assert
-    withToken(bearer())->postJson(route('product.store'),$data)->assertStatus(201);
+    withToken(bearer($user))->postJson(route('product.store'),$data)->assertStatus(201);
+    $data['user_id'] = $user->id;
     $product_expect = expect(Product::first());
     foreach($data as $key => $value){
         $product_expect->{$key}->toBe($value);
@@ -42,6 +43,7 @@ it('create product', function () {
 it('reject invalid product data', function () {
     // Arrange
     $data = Product::factory()->definition();
+    unset($data['user_id']);
     foreach($data as $key => &$value){
         $value = 42;
     }
@@ -82,7 +84,7 @@ it('update product', function () {
     // Arrange
     $product = Product::factory()->create();
     $data = Product::factory()->definition();
-    $data['user_id'] = 1;
+    unset($data['user_id']);
 
     // Act && Assert
     withToken(bearer())->putJson(route('product.update',$product->id),$data)->assertStatus(202);
@@ -96,7 +98,7 @@ it('cant update product because not find him', function () {
     // Arrange
     $product = Product::factory()->create();
     $data = Product::factory()->definition();
-    $data['user_id'] = 1;
+    unset($data['user_id']);
 
     // Act && Assert
     withToken(bearer())->putJson(route('product.update',$product->id+1),$data)->assertStatus(404);
@@ -106,6 +108,7 @@ it('cant update product because the data was wrong',function(){
     // Arrange
     $product = Product::factory()->create();
     $data = Product::factory()->definition();
+    unset($data['user_id']);
     foreach($data as $key => &$value){
         $value = 42;
     }

@@ -23,8 +23,7 @@ class ProductStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:8',
-            'description' => 'required|string|min:8',
-            'user_id' => 'required|exists:users,id'
+            'description' => 'required|string|min:8'
         ];
     }
 }
