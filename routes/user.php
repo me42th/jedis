@@ -14,9 +14,10 @@ use App\Http\Controllers\UserController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::get('/user',[UserController::class,'index'])->name('user.list');
-Route::get('/user/{id}',[UserController::class,'show'])->name('user.show');
-Route::post('/user',[UserController::class,'store'])->name('user.store');
-Route::put('/user/{id}',[UserController::class,'update'])->name('user.update');
-Route::delete('/user/{id}',[UserController::class,'destroy'])->name('user.delete');
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user',[UserController::class,'index'])->name('user.list');
+    Route::get('/user/{id}',[UserController::class,'show'])->name('user.show');
+    Route::post('/user',[UserController::class,'store'])->name('user.store');
+    Route::put('/user/{id}',[UserController::class,'update'])->name('user.update');
+    Route::delete('/user/{id}',[UserController::class,'destroy'])->name('user.delete');
+});
