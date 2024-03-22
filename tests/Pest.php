@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -58,4 +58,17 @@ function paginationSignature(){
 
 function paginationTotal($count){
     return ["total"=>$count];
+}
+
+function bearer($user = null)
+{
+    $user = $user ?? user();
+    Artisan::call('passport:install');
+
+    return $user->createToken('UserToken', ['*'])->accessToken;
+}
+
+function user()
+{
+    return \App\Models\User::factory()->create();
 }

@@ -5,7 +5,8 @@ use function Pest\Laravel\{
     getJson,
     postJson,
     putJson,
-    deleteJson
+    deleteJson,
+    withToken
 };
 use function Pest\Faker\fake;
 
@@ -13,10 +14,10 @@ uses(RefreshDatabase::class);
 
 it('list users', function () {
     // Arrange
-    $users = user::factory($users_count = 5)->create();
+    $users = User::factory($users_count = 5)->create();
 
     // Act && Assert
-    getJson(route('user.list'))->assertOk()->assertSee([
+    withToken(bearer($users->first()))->getJson(route('user.list'))->assertOk()->assertSee([
         ...$users->pluck('name')->toArray(),
         ...$users->pluck('email')->toArray(),
         ...paginationSignature()
@@ -32,9 +33,9 @@ it('create user', function () {
     ];
 
     // Act && Assert
-    postJson(route('user.store'),$data)->assertStatus(201);
+    withToken(bearer())->postJson(route('user.store'),$data)->assertStatus(201);
     unset($data['password']);
-    $user_expect = expect(User::first());
+    $user_expect = expect(User::whereEmail($data['email'])->first());
     foreach($data as $key => $value){
         $user_expect->{$key}->toBe($value);
     }
@@ -49,11 +50,11 @@ it('reject invalid user data', function () {
     ];
 
     // Act && Assert
-    postJson(route('user.store'),$data)
+    withToken(bearer())->postJson(route('user.store'),$data)
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 
-    postJson(route('user.store'),[])
+    withToken(bearer())->postJson(route('user.store'),[])
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 });
@@ -64,7 +65,7 @@ it('find user', function () {
     $user = User::factory()->create();
 
     // Act && Assert
-    getJson(route('user.show',$user->id))
+    withToken(bearer($user))->getJson(route('user.show',$user->id))
         ->assertOk()
         ->assertSee([$user->name,$user->email]);
 });
@@ -75,7 +76,7 @@ it('not find user', function () {
     $user = User::factory()->create();
 
     // Act && Assert
-    getJson(route('user.show',$user->id+1))
+    withToken(bearer($user))->getJson(route('user.show',$user->id+1))
         ->assertStatus(404);
 });
 
@@ -86,13 +87,15 @@ it('update user', function () {
     $data = [
         'name' => fake()->name,
         'email' => fake()->email,
-        'password' => fake()->password(8).random_int(0,9)
+        'password' => fake()->password(8).random_int(0,9).'@'
     ];
 
     // Act && Assert
-    putJson(route('user.update',$user->id),$data)->assertStatus(202);
+    withToken(bearer($user))
+        ->putJson(route('user.update',$user->id),$data)
+        ->assertStatus(202);
     unset($data['password']);
-    $user_expect = expect(user::first());
+    $user_expect = expect(User::first());
     foreach($data as $key => $value){
         $user_expect->{$key}->toBe($value);
     }
@@ -104,11 +107,11 @@ it('cant update user because not find him', function () {
     $data = [
         'name' => fake()->name,
         'email' => fake()->email,
-        'password' => fake()->password(8).random_int(0,9)
+        'password' => fake()->password(8).random_int(0,9).'@'
     ];
 
     // Act && Assert
-    putJson(route('user.update',$user->id+1),$data)->assertStatus(404);
+    withToken(bearer($user))->putJson(route('user.update',$user->id+1),$data)->assertStatus(404);
 });
 
 it('cant update user because the data was wrong',function(){
@@ -121,7 +124,8 @@ it('cant update user because the data was wrong',function(){
     ];
 
     // Act && Assert
-    putJson(route('user.update',$user->id),$data)
+    withToken(bearer($user))
+        ->putJson(route('user.update',$user->id),$data)
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 });
@@ -131,7 +135,8 @@ it('delete user', function () {
     $user = User::factory()->create();
 
     // Act && Assert
-    deleteJson(route('user.delete',$user->id))
+    withToken(bearer($user))
+        ->deleteJson(route('user.delete',$user->id))
         ->assertStatus(200);
     expect(User::first())->toBe(null);
 });
@@ -142,7 +147,8 @@ it('cant delete user because not find him', function () {
     $user = User::factory()->create();
 
     // Act && Assert
-    deleteJson(route('user.delete',$user->id+1))
+    withToken(bearer($user))
+        ->deleteJson(route('user.delete',$user->id+1))
         ->assertStatus(404);
 
     expect(User::first())->id->toBe($user->id);
