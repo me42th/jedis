@@ -1,23 +1,22 @@
-@host=https://httpdump.app/dumps/c6729da5-ab5a-499a-97c7-932f815489e9
 ###############
-# @name login
+# @name Auth
 POST {{host}}/oauth/token
 Content-Type: application/json
 Accept: application/json
 
 {
-    "grant_type": "password",
-    "username": "test@example.com",
-    "password": "password",
-    "client_id": "2",
-    "client_secret": "cS9ya8RnIiqYRBMbA848qtSpFpoz1OPKfrIpGofk",
-    "scope": "*"
+    "grant_type":"password",
+    "client_id":"{{client_id}}",
+    "client_secret":"{{client_secret}}",
+    "username":"{{username}}",
+    "password":"{{password}}",
+    "scope":"*"
 }
 ##############
-@bearer = {{login.response.body.access_token}}
-@product_id =
-@product_name =
-@product_description =
+@bearer = {{Auth.response.body.access_token}}
+@product_id=1
+@product_name=productname
+@product_description=description
 ######################
 # @name ListProduct
 GET {{host}}/api/product

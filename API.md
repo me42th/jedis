@@ -8,35 +8,35 @@
 
 ```File > Preferences > Settings > Extensions > Rest Client > Environment Variables >> Edit in settings.json ```
 
-> Adicione as seguintes linhas no arquivo que foi aberto e troque SEU_EMAIL e SUA_SENHA pelas suas informações
+> Adicione as seguintes linhas no arquivo que foi aberto e troque CLIENT_ID e CLIENT_SECRET pelas informações do comando _passport:client --password_
 
 ```
 "rest-client.environmentVariables": {
        "local": {
             "host": "http://localhost",
-            "email": "SEU_EMAIL",
-            "password": "SUA_SENHA",
+            "email": "test@example.com",
+            "password": "test@example.com",
             "client_id":"CLIENT_ID",
             "client_secret":"CLIENT_SECRET"
         },
          "stage": {
-            "host": "https://url",
-            "email": "SEU_EMAIL",
-            "password": "SUA_SENHA",
-            "client_id":"CLIENT_ID",
-            "client_secret":"CLIENT_SECRET"
+            "host": "",
+            "email": "",
+            "password": "",
+            "client_id":"",
+            "client_secret":""
          },
          "pipeline": {
-            "host": "https://url",
-            "email": "SEU_EMAIL",
-            "password": "SUA_SENHA",
-            "client_id":"CLIENT_ID",
-            "client_secret":"CLIENT_SECRET"
+            "host": "",
+            "email": "",
+            "password": "",
+            "client_id":"",
+            "client_secret":""
          }
     }
 ```
 
-> Aperte CTRL+P e digite > Rest Client: Switch Environment(ou CTRL+ALT+E) e escolha o ambiente local ou stage
+> Aperte CTRL+P e digite > Rest Client: Switch Environment(ou CTRL+ALT+E) e escolha o ambiente local
 
 > Após isso clique em ```Send Request``` no auth, no primeiro uso após abrir o vscode, e depois ```Send Request``` no endpoint desejado
 

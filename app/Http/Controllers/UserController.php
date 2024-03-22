@@ -43,7 +43,11 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, string $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->validated());
+        $data = $request->validated();
+        if($data['password']??false){
+            $data['password'] = bcrypt($data['password']);
+        }
+        $user->update($data);
         return response()->json([],202);
     }
 

@@ -1,23 +1,16 @@
 # Configuração
-##
+## Instalação do projeto
 ### [[Configuração](./README.md)] | [[Desafio](./DESAFIO.md)] | [[API](./API.md)]
 <br><br>
-- php artisan passport:client --password
+### Guarde o retorno do ultimo comando, você irá precisar para configurar [[API](./API.md)]
 ~~~
-{
-     "name": "Listen for XDebug on Docker App",
-     "type": "php",
-     "request": "launch",
-     "port": 9003,
-     "pathMappings": {
-         "/var/www/html": "${workspaceFolder}"
-     },
-     "hostname": "localhost",
-     "xdebugSettings": {
-         "max_data": 65535,
-         "show_hidden": 1,
-         "max_children": 100,
-         "max_depth": 5
-     }
- },
+ git clone git clone https://github.com/me42th/jedis
+ docker-compose up -d
+ docker-compose exec laravel composer install
+ docker-compose exec laravel cp .env.example .env
+ docker-compose exec laravel php artisan key:generate
+ docker-compose exec php artisan migrate
+ docker-compose exec php artisan db:seed
+ docker-compose exec laravel php artisan passport:client --password
+ docker-compose exec laravel ./vendor/bin/pest
 ~~~
