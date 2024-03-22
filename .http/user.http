@@ -1,5 +1,5 @@
 ###############
-# @name login
+# @name Auth
 POST {{host}}/oauth/token
 Cookie: XDEBUG_SESSION=XDEBUG_ECLIPSE
 Content-Type: application/json
@@ -14,11 +14,11 @@ Accept: application/json
     "scope":"*"
 }
 ##############
-@bearer = {{login.response.body.access_token}}
-@user_id =
-@user_name =
-@user_email =
-@user_password =
+@bearer = {{Auth.response.body.access_token}}
+@user_id =1
+@user_name =username
+@user_email =email@email.com
+@user_password =password1@#QWE
 ######################
 # @name ListUser
 GET {{host}}/api/user

@@ -23,7 +23,7 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|unique:App\Models\User,email_address',
+            'email' => 'required|email|unique:App\Models\User,email',
             'name' => 'required|string|min:5',
             'password' => ['required',Password::min(8)->letters()->numbers()->symbols()->uncompromised()]
         ];

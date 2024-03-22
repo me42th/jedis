@@ -23,7 +23,7 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'email|unique:App\Models\User,email_address',
+            'email' => 'email|unique:App\Models\User,email',
             'name' => 'string|min:5',
             'password' => [Password::min(8)->letters()->numbers()->symbols()->uncompromised()]
         ];
