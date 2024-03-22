@@ -2,10 +2,7 @@
 ##
 ### [[Configuração](./README.md)] | [[Desafio](./DESAFIO.md)] | [[API](./API.md)]
 <br><br>
-- php artisan sail:install
-- alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
-- sail up
-
+- php artisan passport:client --password
 ~~~
 {
      "name": "Listen for XDebug on Docker App",

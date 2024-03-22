@@ -8,9 +8,9 @@ use function Pest\Laravel\{
     getJson,
     postJson,
     putJson,
-    deleteJson
+    deleteJson,
+    withToken
 };
-
 uses(RefreshDatabase::class);
 
 it('list products', function () {
@@ -18,7 +18,7 @@ it('list products', function () {
     $products = Product::factory($products_count = 5)->create();
 
     // Act && Assert
-    getJson(route('product.list'))->assertOk()->assertSee([
+    withToken(bearer())->getJson(route('product.list'))->assertOk()->assertSee([
         ...$products->pluck('name')->toArray(),
         ...$products->pluck('description')->toArray(),
         ...paginationSignature()
@@ -32,7 +32,7 @@ it('create product', function () {
     $data['user_id'] = 1;
 
     // Act && Assert
-    postJson(route('product.store'),$data)->assertStatus(201);
+    withToken(bearer())->postJson(route('product.store'),$data)->assertStatus(201);
     $product_expect = expect(Product::first());
     foreach($data as $key => $value){
         $product_expect->{$key}->toBe($value);
@@ -47,11 +47,11 @@ it('reject invalid product data', function () {
     }
 
     // Act && Assert
-    postJson(route('product.store'),$data)
+    withToken(bearer())->postJson(route('product.store'),$data)
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 
-    postJson(route('product.store'),[])
+    withToken(bearer())->postJson(route('product.store'),[])
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 });
@@ -62,7 +62,7 @@ it('find product', function () {
     $product = Product::factory()->create();
 
     // Act && Assert
-    getJson(route('product.show',$product->id))
+    withToken(bearer())->getJson(route('product.show',$product->id))
         ->assertOk()
         ->assertSee([$product->name,$product->description]);
 });
@@ -73,7 +73,7 @@ it('not find product', function () {
     $product = Product::factory()->create();
 
     // Act && Assert
-    getJson(route('product.show',$product->id+1))
+    withToken(bearer())->getJson(route('product.show',$product->id+1))
         ->assertStatus(404);
 });
 
@@ -85,7 +85,7 @@ it('update product', function () {
     $data['user_id'] = 1;
 
     // Act && Assert
-    putJson(route('product.update',$product->id),$data)->assertStatus(202);
+    withToken(bearer())->putJson(route('product.update',$product->id),$data)->assertStatus(202);
     $product_expect = expect(Product::first());
     foreach($data as $key => $value){
         $product_expect->{$key}->toBe($value);
@@ -99,7 +99,7 @@ it('cant update product because not find him', function () {
     $data['user_id'] = 1;
 
     // Act && Assert
-    putJson(route('product.update',$product->id+1),$data)->assertStatus(404);
+    withToken(bearer())->putJson(route('product.update',$product->id+1),$data)->assertStatus(404);
 });
 
 it('cant update product because the data was wrong',function(){
@@ -111,7 +111,7 @@ it('cant update product because the data was wrong',function(){
     }
 
     // Act && Assert
-    putJson(route('product.update',$product->id),$data)
+    withToken(bearer())->putJson(route('product.update',$product->id),$data)
         ->assertStatus(422)
         ->assertSee(array_keys($data));
 });
@@ -121,7 +121,7 @@ it('delete product', function () {
     $product = Product::factory()->create();
 
     // Act && Assert
-    deleteJson(route('product.delete',$product->id))
+    withToken(bearer())->deleteJson(route('product.delete',$product->id))
         ->assertStatus(200);
     expect(Product::first())->toBe(null);
 });
@@ -132,7 +132,7 @@ it('cant delete product because not find him', function () {
     $product = Product::factory()->create();
 
     // Act && Assert
-    deleteJson(route('product.delete',$product->id+1))
+    withToken(bearer())->deleteJson(route('product.delete',$product->id+1))
         ->assertStatus(404);
 
     expect(Product::first())->id->toBe($product->id);
