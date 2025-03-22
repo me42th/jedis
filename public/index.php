@@ -1,31 +1,28 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Application
-|--------------------------------------------------------------------------
-|
-| Este arquivo serve para carregar o aplicativo web e responder a solicitações.
-| Você pode personalizar este arquivo conforme necessário para o seu aplicativo.
-|
-*/
+$recipe = 'Receita de Bolo:
 
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
-use Illuminate\Contracts\Debug\ExceptionHandler;
+Ingredientes:
+- 2 xícaras de farinha de trigo
+- 1 xícara de açúcar
+- 3 ovos
+- 1 colher de fermento em pó
 
-define('LARAVEL_START', microtime(true));
+Modo de Preparo:
+1. Misture todos os ingredientes em uma tigela.
+2. Despeje a massa em uma forma untada.
+3. Leve ao forno preaquecido por 40 minutos.
+4. Sirva e aproveite!';
 
-require __DIR__.'/../vendor/autoload.php';
+?>
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-$kernel = $app->make(Kernel::class);
-
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-);
-
-$response->send();
-
-$kernel->terminate($request, $response);
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receita de Bolo</title>
+</head>
+<body>
+    <h1>Receita de Bolo</h1>
+    <p><?php echo $recipe; ?></p>
+</body>
+</html>
