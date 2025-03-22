@@ -1,1 +1,1 @@
-$composer_content
+{...Your JSON Content... "require": {"laravel/framework": "^8.0"} ...More JSON Content...}
